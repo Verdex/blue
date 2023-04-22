@@ -26,7 +26,8 @@ pub enum Il {
     TupleCons(usize),
     Match,
     Def,
-    Call,
+    CallDef(String),
+    CallStack,
     Return,
     Exit,
 }
