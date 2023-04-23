@@ -1,4 +1,5 @@
 
+use std::rc::Rc;
 use std::collections::HashMap;
 
 #[derive(Debug, Clone)]
@@ -9,7 +10,6 @@ pub enum IlData {
     Tuple(Vec<IlData>),
     List(Vec<IlData>),
     Pattern(IlPat),
-    Code(Vec<Il>),
 }
 
 #[derive(Debug, Clone)]
@@ -26,14 +26,17 @@ pub enum Il {
     TupleCons(usize),
     Match,
     Def,
-    CallDef(String),
-    CallStack,
     Return,
     Exit,
 }
 
+pub enum Word {
+    Il(Vec<Il>),
+    Func(Vec<Rc<Word>>),
+}
+
 #[derive(Debug)] 
-pub struct ExeEnv {
+pub struct ExeResult {
     pub data_stack : Vec<IlData>,
     pub def_stack : Vec<HashMap<String, IlData>>,
 }
