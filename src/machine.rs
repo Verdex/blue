@@ -18,7 +18,7 @@ pub fn execute<'a>( main : String
 
 
     loop {
-        match current_word {
+        match &*current_word {
             Word::Func(words) if ip >= words.len() => {
                 // End of word
                 def_stack.pop();
@@ -31,7 +31,7 @@ pub fn execute<'a>( main : String
                 }
             },
             Word::Func(words) => {
-                func_stack.push((current_word, ip + 1));
+                func_stack.push((current_word.clone(), ip + 1));
                 def_stack.push();
 
                 current_word = words[ip].clone();
