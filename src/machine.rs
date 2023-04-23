@@ -13,14 +13,35 @@ pub fn execute<'a>( main : String
     let mut func_stack : Vec<(Rc<Word>, usize)> = vec![];
 
    
-    let mut current_word = dict.get(&main).unwrap(); // TODO
+    let mut current_word : Rc<Word> = dict.get(&main).unwrap().clone(); // TODO
     let mut ip : usize = 0;
 
+
     loop {
-        /*if code.len() <= ip {
-            // TODO runtime error
-            panic!("instruction pointer out of range");
+        match current_word {
+            Word::Func(words) if ip >= words.len() => {
+                // End of word
+                def_stack.pop();
+                match func_stack.pop() {
+                    Some((word, new_ip)) => { 
+                        current_word = word;
+                        ip = new_ip;
+                    },
+                    None => { break; },
+                }
+            },
+            Word::Func(words) => {
+                func_stack.push((current_word, ip + 1));
+                def_stack.push();
+
+                current_word = words[ip].clone();
+                ip = 0;
+            },
+            Word::Il(instrs) => {
+
+            },
         }
+        /*
 
         match &code[ip] {
             Il::Push(data) => {

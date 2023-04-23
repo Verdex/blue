@@ -26,7 +26,6 @@ pub enum Il {
     TupleCons(usize),
     Match,
     Def,
-    Return,
     Exit,
 }
 
