@@ -36,22 +36,23 @@ pub enum Word {
 }
 
 #[derive(Debug)] 
-pub struct ExeResult {
+pub struct ExeResult<'a> {
     pub data_stack : Vec<IlData>,
-    pub def_stack : Vec<HashMap<String, IlData>>,
+    pub def_stack : DefStack<'a>,
 }
 
+#[derive(Debug)]
 pub struct DefStack<'a> {
     base : &'a mut HashMap<String, IlData>,
     stack : Vec<HashMap<String, IlData>>,
 }
 
 impl<'a> DefStack<'a> {
-    fn new(base : &'a mut HashMap<String, IlData>) -> Self {
+    pub fn new(base : &'a mut HashMap<String, IlData>) -> Self {
         DefStack { base, stack : vec![] }
     }
 
-    fn get(&self, name : &String) -> Option<&IlData> {
+    pub fn get(&self, name : &String) -> Option<&IlData> {
         let target = self.stack.iter().rev().find(|map| map.contains_key(name));
         match target { 
             Some(map) => map.get(name),
@@ -59,7 +60,7 @@ impl<'a> DefStack<'a> {
         }
     } 
 
-    fn set(&mut self, name : String, data : IlData) {
+    pub fn set(&mut self, name : String, data : IlData) {
         if self.stack.len() > 0 {
             let last = self.stack.len() - 1;
             self.stack[last].insert(name, data);
@@ -69,11 +70,11 @@ impl<'a> DefStack<'a> {
         }
     }
 
-    fn push(&mut self) {
+    pub fn push(&mut self) {
         self.stack.push(HashMap::new());
     }
 
-    fn pop(&mut self) {
+    pub fn pop(&mut self) {
         self.stack.pop();
     }
 }

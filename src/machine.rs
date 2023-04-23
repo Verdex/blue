@@ -4,10 +4,10 @@ use std::collections::HashMap;
 
 use crate::data::*;
 
-pub fn execute( main : String
-              , dict : &mut HashMap<String, Rc<Word>>
-              , defs : &mut HashMap<String, IlData>
-              ) -> ExeResult {
+pub fn execute<'a>( main : String
+                  , dict : &mut HashMap<String, Rc<Word>>
+                  , defs : &'a mut HashMap<String, IlData>
+                  ) -> ExeResult<'a> {
     let mut data_stack : Vec<IlData> = vec![];
     let mut def_stack = DefStack::new(defs);
     let mut func_stack : Vec<(Rc<Word>, usize)> = vec![];
