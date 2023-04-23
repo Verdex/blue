@@ -78,8 +78,39 @@ pub fn execute(il : Vec<Il>) -> ExeEnv {
     ExeEnv { data_stack, def_stack }
 }
 
+struct DefStack<'a> {
+    base : &'a mut HashMap<String, IlData>,
+    stack : Vec<HashMap<String, IlData>>,
+}
 
-struct Code<'a> {
-    prog : Cow<'a, [Il]>,
-    ip : usize,
+impl<'a> DefStack<'a> {
+    fn new(base : &'a mut HashMap<String, IlData>) -> Self {
+        DefStack { base, stack : vec![] }
+    }
+
+    fn get(&self, name : &String) -> Option<&IlData> {
+        let target = self.stack.iter().rev().find(|map| map.contains_key(name));
+        match target { 
+            Some(map) => map.get(name),
+            None => self.base.get(name),
+        }
+    } 
+
+    fn set(&mut self, name : String, data : IlData) {
+        if self.stack.len() > 0 {
+            let last = self.stack.len() - 1;
+            self.stack[last].insert(name, data);
+        }
+        else {
+            self.base.insert(name, data);
+        }
+    }
+
+    fn push(&mut self) {
+        self.stack.push(HashMap::new());
+    }
+
+    fn pop(&mut self) {
+        self.stack.pop();
+    }
 }
