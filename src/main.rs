@@ -12,7 +12,7 @@ fn main() {
     let mut defs = HashMap::new();
     let mut dict = HashMap::new();
 
-    let blarg = Rc::new(Word::Il(vec![]));
+    let blarg = Rc::new(Word::Il(vec![Il::Push(IlData::Float(1.0)), Il::Push(IlData::Float(1.0)), Il::TupleCons(2)]));
     dict.insert("blarg".into(), blarg.clone());
 
     let other = Rc::new(Word::Func(vec![blarg.clone(), blarg.clone()]));
@@ -20,7 +20,7 @@ fn main() {
     let main = Rc::new(Word::Func(vec![other.clone(), other.clone()]));
     dict.insert("main".into(), main);
 
+    let result = machine::execute("main".into(), &mut dict, &mut defs);
 
-
-    machine::execute("main".into(), &mut dict, &mut defs);
+    println!("{:?}", result);
 }

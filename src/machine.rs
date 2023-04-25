@@ -38,9 +38,16 @@ pub fn execute<'a>( main : String
                 ip = 0;
             },
             Word::Il(instrs) => {
-                println!("ip {}", ip);
                 for instr in instrs {
                     match instr {
+                        Il::Push(data) => {
+                            data_stack.push(data.clone());
+                        },
+                        Il::TupleCons(count) => {
+                            let s = data_stack.len() - count;
+                            let params = data_stack.drain(s..).collect();
+                            data_stack.push(IlData::Tuple(params));
+                        },
                         Il::Exit => { break 'main_loop; },
                         _ => todo!(),
                     }
