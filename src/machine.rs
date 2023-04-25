@@ -38,7 +38,19 @@ pub fn execute<'a>( main : String
                 ip = 0;
             },
             Word::Il(instrs) => {
+                println!("ip {}", ip);
+                /*for instr in instrs {
 
+                }*/
+                // TODO def needs to go into last - 1 def_stack instead of last
+                def_stack.pop();
+                match func_stack.pop() {
+                    Some((word, new_ip)) => { 
+                        current_word = word;
+                        ip = new_ip;
+                    },
+                    None => { break; },
+                }
             },
         }
         /*
