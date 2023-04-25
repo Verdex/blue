@@ -24,8 +24,8 @@ pub enum IlPat {
 pub enum Il {
     Push(IlData),
     TupleCons(usize),
-    Match,
-    Def,
+    DefVar,
+    DefWord,
     Exit,
 }
 

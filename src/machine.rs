@@ -17,7 +17,7 @@ pub fn execute<'a>( main : String
     let mut ip : usize = 0;
 
 
-    loop {
+    'main_loop : loop {
         match &*current_word {
             Word::Func(words) if ip >= words.len() => {
                 // End of word
@@ -27,7 +27,7 @@ pub fn execute<'a>( main : String
                         current_word = word;
                         ip = new_ip;
                     },
-                    None => { break; },
+                    None => { break 'main_loop; },
                 }
             },
             Word::Func(words) => {
@@ -39,9 +39,12 @@ pub fn execute<'a>( main : String
             },
             Word::Il(instrs) => {
                 println!("ip {}", ip);
-                /*for instr in instrs {
-
-                }*/
+                for instr in instrs {
+                    match instr {
+                        Il::Exit => { break 'main_loop; },
+                        _ => todo!(),
+                    }
+                }
                 // TODO def needs to go into last - 1 def_stack instead of last
                 def_stack.pop();
                 match func_stack.pop() {
@@ -49,44 +52,10 @@ pub fn execute<'a>( main : String
                         current_word = word;
                         ip = new_ip;
                     },
-                    None => { break; },
+                    None => { break 'main_loop; },
                 }
             },
         }
-        /*
-
-        match &code[ip] {
-            Il::Push(data) => {
-                data_stack.push(data.clone());
-                ip+=1;
-            },
-            Il::TupleCons(count) => {
-                let params = data_stack.drain((data_stack.len() - count)..).collect::<Vec<_>>();
-                data_stack.push(IlData::Tuple(params));
-                ip+=1;
-            },
-            Il::Def => { // (str data -- )
-                let name = data_stack.pop().unwrap(); 
-                let data = data_stack.pop().unwrap();
-                let current_env = {
-                    let last = def_stack.len() - 1;
-                    &mut def_stack[last]
-                };
-                if let IlData::String(s) = name {
-                    current_env.insert(s, data); // TODO what semantics should redefinition have
-                }
-                else {
-                    // TODO runtime error
-                    panic!("TODO");
-                }
-                
-                ip+=1;
-            },
-            Il::Exit => {
-                break;
-            }
-            _ => todo!(),
-        }*/
     }
 
     ExeResult { data_stack, def_stack }
