@@ -17,7 +17,7 @@ fn main() {
 
     let other = Rc::new(Word::Func(vec![blarg.clone(), blarg.clone()]));
 
-    let main = Rc::new(Word::Func(vec![other.clone(), other.clone()]));
+    let main = Rc::new(Word::Func(vec![other.clone(), blarg.clone()]));
     dict.insert("main".into(), main);
 
     let result = machine::execute("main".into(), &mut dict, &mut defs);

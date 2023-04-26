@@ -48,12 +48,25 @@ pub fn execute<'a>( main : String
                             let params = data_stack.drain(s..).collect();
                             data_stack.push(IlData::Tuple(params));
                         },
+                        Il::DefVar => { // (sym data -- )
+                            let sym = data_stack.pop().unwrap(); // TODO
+                            let data = data_stack.pop().unwrap(); // TODO
+
+                            if let IlData::Symbol(name) = sym {
+                                // TODO collision?
+                                def_stack.set(name, data);
+                            }
+                            else {
+                                // TODO
+                            }
+                        },
+                        Il::DefWord => { 
+
+                        },
                         Il::Exit => { break 'main_loop; },
                         _ => todo!(),
                     }
                 }
-                // TODO def needs to go into last - 1 def_stack instead of last
-                def_stack.pop();
                 match func_stack.pop() {
                     Some((word, new_ip)) => { 
                         current_word = word;
