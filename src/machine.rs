@@ -60,8 +60,29 @@ pub fn execute<'a>( main : String
                                 // TODO
                             }
                         },
-                        Il::DefWord => { 
+                        Il::DefWord => { // (sym list<sym> -- )
+                            println!("def word entry");
+                            let sym = data_stack.pop().unwrap(); // TODO
+                            let def = data_stack.pop().unwrap(); // TODO
 
+                            if let (IlData::Symbol(name), IlData::List(code)) = (sym, def) {
+                                let mut func_addr = vec![];
+                                for func_name in code.iter() {
+                                    match func_name {
+                                        IlData::Symbol(x) => {
+                                            let addr = dict.get(x).unwrap(); // TODO
+                                            func_addr.push(addr.clone());
+                                        },
+                                        _ => todo!(), // TODO unreachable?
+                                    }
+                                }
+                                dict.insert(name, Rc::new(Word::Func(func_addr))); // TODO collision
+                                println!("def word");
+                            }
+                            else {
+                                // TODO
+                                println!("else of def word");
+                            }
                         },
                         Il::Exit => { break 'main_loop; },
                         _ => todo!(),
@@ -80,3 +101,6 @@ pub fn execute<'a>( main : String
 
     ExeResult { data_stack, def_stack }
 }
+
+fn slice<'a, T>(input : &'a Vec<T>) -> &'a [T] { &input[..] }
+fn unbox<'a, T>(input : &'a Box<T> ) -> &'a T { &**input }

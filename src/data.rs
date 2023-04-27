@@ -29,6 +29,7 @@ pub enum Il {
     Exit,
 }
 
+#[derive(Debug)]
 pub enum Word {
     Il(Vec<Il>),
     Func(Vec<Rc<Word>>),
