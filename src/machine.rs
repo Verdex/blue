@@ -4,6 +4,9 @@ use std::collections::HashMap;
 
 use crate::data::*;
 
+// TODO mutable list of parsers
+// TODO no more main
+// TODO &str of input
 pub fn execute<'a>( main : String
                   , dict : &mut HashMap<String, Rc<Word>>
                   , defs : &'a mut HashMap<String, IlData>

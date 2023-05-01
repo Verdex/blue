@@ -3,6 +3,9 @@
     Iterator : 
         next : self -> Option<char>
 
-    Parser<T> : &mut Iterator -> Result<T, Error | Fatal>
+    Parser<vec<symbol>> : &mut Iterator -> Result<T, Error | Fatal>
+
+    unlinked word : 
+
 
 */
